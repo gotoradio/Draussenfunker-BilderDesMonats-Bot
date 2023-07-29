@@ -12,7 +12,7 @@ YearMonth = YearMonth.split('.')
 Month = YearMonth[0]
 Year = YearMonth[1]
 
-client = commands.Bot(intents=discord.Intents.all(), command_prefix='!')
+client = discord.Client(intents=discord.Intents.all()) #intents=discord.Intents.all() is only sometimes necesary, if you get an error remove it!
 
 @client.event
 async def on_ready():
