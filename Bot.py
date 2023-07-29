@@ -18,8 +18,7 @@ client = discord.Client(intents=discord.Intents.all()) #intents=discord.Intents.
 async def on_ready():
     print('We have logged in as {0.user}'.format(client))
     channel = client.get_channel("****")
-    async for message in channel.history(limit=200, after=datetime.datetime(2023, int(Month) , 29)):
-        #print(message.content)
+    async for message in channel.history(limit=200, after=datetime.datetime(int(Year), int(Month) , 0)):
         try:
             AttatchmentList = message.attachments
         except:
