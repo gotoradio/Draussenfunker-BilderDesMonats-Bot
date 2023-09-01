@@ -6,7 +6,7 @@ YearMonth = YearMonth.split('.')
 Month = YearMonth[0]
 Year = YearMonth[1]
 
-print("Run:\ngit clone https://github.com/IamBuildDifferent/draussenfunker.github.io.git; mkdir draussenfunker.github.io/docs/.vuepress/public/aktivitaeten/BDM-{YearNr}-{MonthNr}/".format(YearNr=Year, MonthNr=Month))
+print("Run: git clone https://github.com/IamBuildDifferent/draussenfunker.github.io.git; mkdir draussenfunker.github.io/docs/.vuepress/public/aktivitaeten/BDM-{YearNr}-{MonthNr}/".format(YearNr=Year, MonthNr=Month))
 input("Ready?")
 
 NrToMonthName = ["","Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"]
@@ -61,7 +61,7 @@ async def on_ready():
     vuepressFile = open("draussenfunker.github.io/docs/aktivitaeten/{YearNr}-{MonthNr}-30-Bilder-Des-Monats-{MonthName}.md".format(YearNr=Year,MonthNr=Month, MonthName=NrToMonthName[int(Month)]),"w")
     vuepressFile.write(ToPost)
     vuepressFile.close()
-    print("Run:\ngit add -A; git commit -m \"Bilder des Monats {MonthName}\"; git push".format(MonthName=NrToMonthName[int(Month)]))
+    print("Run: cd draussenfunker.github.io; git add -A; git commit -m \"Bilder des Monats {MonthName}\"; git push".format(MonthName=NrToMonthName[int(Month)]))
     print("End of Job. Exiting...")
     await client.close()
 client.run("****")
