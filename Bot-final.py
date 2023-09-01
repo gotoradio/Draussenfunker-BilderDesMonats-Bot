@@ -6,7 +6,7 @@ YearMonth = YearMonth.split('.')
 Month = YearMonth[0]
 Year = YearMonth[1]
 
-print("Run: git clone https://github.com/IamBuildDifferent/draussenfunker.github.io.git; mkdir draussenfunker.github.io/docs/.vuepress/public/aktivitaeten/BDM-{YearNr}-{MonthNr}/".format(YearNr=Year, MonthNr=Month))
+print("Run: git clone https://github.com/****/draussenfunker.github.io.git; mkdir draussenfunker.github.io/docs/.vuepress/public/aktivitaeten/BDM-{YearNr}-{MonthNr}/".format(YearNr=Year, MonthNr=Month))
 input("Ready?")
 
 NrToMonthName = ["","Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"]
