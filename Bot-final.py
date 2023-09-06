@@ -23,7 +23,8 @@ features:
 
 # Bilder des Monats: {MonthName} {YearNumber}
 
-Ohne viele Worte einige Bilder der Draußenfunker.'''
+Ohne viele Worte einige Bilder der Draußenfunker.
+'''
 
 ImgForm="![Bilder des Monats]({ImgPath})\n"
 
@@ -32,7 +33,7 @@ client = discord.Client(intents=discord.Intents.default()) #intents=discord.Inte
 @client.event
 async def on_ready():
     DescriptionImmageList = []
-    Count = 1
+    Count = 0
     DescriptionOld='esdfghjkkml,l'
     ToPost = ""
     print('We have logged in')
