@@ -21,10 +21,7 @@ features:
     - FOTOS
 ---
 
-# Bilder des Monats: {MonthName} {YearNumber}
-
-Ohne viele Worte einige Bilder der Draußenfunker.
-'''
+# Bilder des Monats: {MonthName} {YearNumber}'''
 
 ImgForm="![Bilder des Monats]({ImgPath})\n"
 
