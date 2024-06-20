@@ -1,20 +1,7 @@
 from discord.ext import commands
 import discord, datetime, shutil, requests, random
 
-MonthName = {
-    '01': 'Januar',
-    '02': 'Februar',
-    '03': 'März',
-    '04': 'April',
-    '05': 'Mai',
-    '06': 'Juni',
-    '07': 'Juli',
-    '08': 'August',
-    '09': 'September',
-    '10': 'Oktober',
-    '11': 'November',
-    '12': 'Dezember'
-}
+MonthName = {'01': 'Januar', '02': 'Februar', '03': 'März', '04': 'April', '05': 'Mai', '06': 'Juni', '07': 'Juli', '08': 'August', '09': 'September', '10': 'Oktober', '11': 'November', '12': 'Dezember'}
 vuepressImmages = ''
 error = ''
 
@@ -36,7 +23,7 @@ async def on_ready():
     print('Logged in')
     
     ImmageCount = 0
-    global  vuepressImmages
+    global vuepressImmages
     global error
 
     channel = client.get_channel(****)
@@ -45,23 +32,29 @@ async def on_ready():
             if message.content == '':
                 print('\n\nNo description')
                 vuepressImmages += '\n---\n\n'
+
+                line = vuepressImmages.count('\n') + 2
+                error += f'No description in line {line}\n'
+
             else:
                 print(f'\n\nDescription: {message.content}')
 
                 if '<@' in message.content or '<#' in message.content:
+                    print('Error: @ or # in message')
+
                     line = vuepressImmages.count('\n') + 2
                     error += f'@ or # in line {line}\n'
 
                 vuepressImmages += f'\n{message.content}\n\n'
-                
+
             print(f'\nReaction: {message.reactions}\n')
 
             for Attatchment in message.attachments:
-                # Download attatched immage into the right Folder with numerated names
-                print(f'Immage: {ImmageCount:02d}')
-                #imageName = str(Count) + ':' + Month + '.' + Year + '.jpg'
-                ImmageName = f'{ImmageCount:02d}:{Month}.{Year}.jpg'
+                print(f'Downloading immage nr. {ImmageCount:02d}')
+
+                ImmageName = f'{ImmageCount:02d}_{Month}-{Year}.jpg'
                 LocalPath = f'draussenfunker.github.io/docs/.vuepress/public/aktivitaeten/BDM-{Year}-{Month}/{ImmageName}'
+
                 shutil.copyfileobj(requests.get(Attatchment.url, stream=True).raw, open(LocalPath, 'wb'))
 
                 vuepressImmages += f'![Bilder des Monats](/aktivitaeten/BDM-{Year}-{Month}/{ImmageName})\n'
@@ -79,7 +72,7 @@ title: Bilder des Monats {MonthName[Month]} {Year}
 description:
     Bilder des Monats {MonthName[Month]} aus unserer Community im Discord.
 type: activity
-image: /aktivitaeten/BDM-{Year}-{Month}/{CoverImgNr}:{Month}.{Year}.jpg
+image: /aktivitaeten/BDM-{Year}-{Month}/{CoverImgNr}_{Month}-{Year}.jpg
 features:
     - FOTOS
 ---
