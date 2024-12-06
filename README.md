@@ -9,8 +9,7 @@ You need Python and the libarys [discord.py](https://pypi.org/project/discord.py
 The Bot searches the channel history to the specified date you put in. If it finds a picture it sves it with the description and builds a vuepress document ready to be merged to the Website.
 
 ## Modifing it to your own needs
-```channel = client.get_channel(****)``` Change the ```***``` to the Channel ID of your own Channel.  
-```client.run(****)``` Change the ```****``` to your own Discord bot token from the Developer-Portal.
+specify ```botToken``` and ```channelID``` in ```secrets.py```.
 
 ## State
 Fully Working now
