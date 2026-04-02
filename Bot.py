@@ -12,10 +12,10 @@ Month = YearMonth[0]
 Year = YearMonth[1]
 
 print('Pulling the repository and creating a picture dir...')
-if subprocess.call(['git', 'pull'], cwd='draussenfunker.github.io') != 0:
+if subprocess.call(['git', 'pull'], cwd='../draussenfunker.github.io') != 0:
     exit('Error, can not pull the repository, Exiting')
     pass
-if subprocess.call(['mkdir', f'docs/.vuepress/public/aktivitaeten/BDM-{Year}-{Month}/'], cwd='draussenfunker.github.io') != 0:
+if subprocess.call(['mkdir', f'docs/.vuepress/public/aktivitaeten/BDM-{Year}-{Month}/'], cwd='../draussenfunker.github.io') != 0:
     #exit('Error, can not create picture dir, Exiting')
     pass
 print('Ready')
@@ -31,39 +31,62 @@ async def on_ready():
     global error
 
     channel = client.get_channel(secrets.channelID)
-    async for message in channel.history(limit=500, after=datetime.datetime(int(Year), int(Month), 1),): #before=datetime.datetime(int(Year), int(Month) + 1, 1)): <-- dos not work for December 12 + 1 = 13
+
+    if int(Month) == 12:
+        next_month = datetime.datetime(int(Year) + 1, 1, 1)
+    else:
+        next_month = datetime.datetime(int(Year), int(Month) + 1, 1)
+
+    async for message in channel.history(limit=500, after=datetime.datetime(int(Year), int(Month), 1), before=next_month):
         if message.attachments != []:
-            if message.content == '':
-                print('\n\nNo description')
-                vuepressImmages += '\n---\n\n'
+            text = message.content
+            skip = False
 
-                line = vuepressImmages.count('\n') + 2
-                error += f'No description in line {line}\n'
+            for i in message.reactions:
+                async for user in i.users():
+                    #if user == "techi2":
+                    print(user.id)
+                    print(i.emoji)
 
-            else:
-                print(f'\n\nDescription: {message.content}')
+                    if user.id == secrets.myUserID:
+                        if '✖' in i.emoji:
+                            print('gelöscht')
+                            skip = True
 
-                # <@614242831434776576> <#1062798608581267636>
-                if '<@' in message.content or '<#' in message.content:
-                    print('Error: @ or # in message')
+                        if '⬆️' in i.emoji:
+                            text = text_prev
 
-                    line = vuepressImmages.count('\n') + 2
-                    error += f'@ or # in line {line}\n'                     # Line count dos not work properly
+                        if '⬇️' in i.emoji:
+                            async for message_next in channel.history(limit=1, after=message):
+                                text = message_next.content
 
-                vuepressImmages += f'\n{message.content}\n\n'
+            print(f'\n\nDescription: {text}')
 
-            print(f'\nReaction: {message.reactions}\n')
+            if not skip:
+                if '<@' in text or '<#' in text:
+                    print(f'\nError: @ or # in text https://discord.com/channels/{secrets.serverID}/{secrets.channelID}/{message.id}')
 
-            for Attatchment in message.attachments:
-                print(f'Downloading immage nr. {ImmageCount:02d}')
+                    corrected_text = input('\nCorrected Text, leave empty to skip the picture(s): ')
 
-                ImmageName = f'{ImmageCount:02d}_{Month}-{Year}.jpg'
-                LocalPath = f'draussenfunker.github.io/docs/.vuepress/public/aktivitaeten/BDM-{Year}-{Month}/{ImmageName}'
+                    if corrected_text:
+                        text = corrected_text
+                    else:
+                        continue
 
-                shutil.copyfileobj(requests.get(Attatchment.url, stream=True).raw, open(LocalPath, 'wb'))                       # needs to be async and also save .png not as .jpg
+                vuepressImmages += f'\n{text}\n\n'
 
-                vuepressImmages += f'![Bilder des Monats](/aktivitaeten/BDM-{Year}-{Month}/{ImmageName})\n'
-                ImmageCount += 1
+                for Attatchment in message.attachments:
+                    print(f'Downloading immage nr. {ImmageCount:02d}')
+
+                    ImmageName = f'{ImmageCount:02d}_{Month}-{Year}.jpg'
+                    LocalPath = f'../draussenfunker.github.io/docs/.vuepress/public/aktivitaeten/BDM-{Year}-{Month}/{ImmageName}'
+
+                    shutil.copyfileobj(requests.get(Attatchment.url, stream=True).raw, open(LocalPath, 'wb'))                       # needs to be async and also save .png not as .jpg
+
+                    vuepressImmages += f'![Bilder des Monats](/aktivitaeten/BDM-{Year}-{Month}/{ImmageName})\n'
+                    ImmageCount += 1
+
+        text_prev = message.content
     
     print('\n\nClosing Discord')
     await client.close()
@@ -86,8 +109,11 @@ features:
 
 {vuepressImmages}'''
 
+if subprocess.call(['../../../../../../bot/optimize.sh'], cwd=f'../draussenfunker.github.io/docs/.vuepress/public/aktivitaeten/BDM-{Year}-{Month}/') != 0:
+    Exit('Error, can not rezise Immages')
+
 print('\nSaving vuepress file...')
-vuepressFileName = f'draussenfunker.github.io/docs/aktivitaeten/{Year}-{Month}-30-Bilder-Des-Monats-{MonthName[Month]}.md'
+vuepressFileName = f'../draussenfunker.github.io/docs/aktivitaeten/{Year}-{Month}-30-Bilder-Des-Monats-{MonthName[Month]}.md'
 vuepressFile = open(vuepressFileName, "w")
 vuepressFile.write(vuepressFileText)
 vuepressFile.close()
@@ -98,10 +124,10 @@ if error != '':
     input('Hit return to continue')
 
 input('Crate commit and push it to the remote repository')
-if subprocess.call(['git', 'add', '-A'], cwd='draussenfunker.github.io') != 0:
+if subprocess.call(['git', 'add', '-A'], cwd='../draussenfunker.github.io') != 0:
     Exit('Error, can not add Files to commit')
-if subprocess.call(['git', 'commit', '-m', f'\"Bilder des Monats {MonthName[Month]}\"'], cwd='draussenfunker.github.io') != 0:
+if subprocess.call(['git', 'commit', '-m', f'\"Bilder des Monats {MonthName[Month]}\"'], cwd='../draussenfunker.github.io') != 0:
     Exit('Error, can not commit')
-if subprocess.call(['git', 'push'], cwd='draussenfunker.github.io') != 0:
+if subprocess.call(['git', 'push'], cwd='../draussenfunker.github.io') != 0:
     Exit('Error, can not push the remote Repository')
 print('All done, Exiting')
